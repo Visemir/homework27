@@ -1,0 +1,25 @@
+route:
+  receiver: 'stardata-telegram'
+  routes:
+  - receiver: 'stardata-telegram'
+    group_by: []
+    matchers:
+    - severity=~"warning|critical"
+
+receivers:
+- name: 'stardata-telegram'
+  telegram_configs:
+    - bot_token: "7730530376:AAF5rQ2blw10sQj0tkHccIF6bLfJvaQuisI"
+      chat_id: -4522432156
+      send_resolved: true 
+      parse_mode: 'HTML'
+      api_url: https://api.telegram.org
+      message:  |
+         🚨 Alertmanager 🚨
+         🔘 Status: {{ if eq .Status "firing" }}Firing{{ else }}Normal{{ end }}
+         {{ range .Alerts }}
+         🔺 Alertname: {{ .Labels.alertname }}
+         📌 Severity: {{ .Labels.severity }}
+         📌 Summary: {{ .Annotations.summary }}
+         📋 Description: {{ .Annotations.description }}
+         {{ end }}
